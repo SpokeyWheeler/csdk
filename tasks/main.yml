@@ -24,8 +24,13 @@
 
 - name: set the install media file name if HCL
   set_fact:
-    csdk_install_media_name: "hcl.csdk.{{ csdk_version }}.ALL.tar.gz"
+    csdk_install_media_name: "hcl.csdk.{{ csdk_version }}.LNX.tar.gz"
   when: vendor == "hcl"
+
+- name: set the install media file name if IBM
+  set_fact:
+    csdk_install_media_name: "clientsdk.{{ csdk_version }}.LINUX.tar"
+  when: vendor == "ibm"
 
 - name: set selinux permissive
   selinux:
@@ -70,20 +75,20 @@
 
 - name: run installer
   become: true
-  command: java -jar setup.jar -i silent -DLICENSE=accepted -DUSER_INSTALL_DIR="{{ csdk_install_path }}"
+  command: ./installclientsdk -i silent -DLICENSE_ACCEPTED=true -DUSER_INSTALL_DIR="{{ csdk_install_path }}"
   args:
     chdir: "{{ csdk_tmp_path }}"
   when: not csdk_version_previously_installed
 
 - name: validate install
   stat:
-    path: "{{ csdk_install_path }}/lib/ifxcsdk.jar"
+    path: "{{ csdk_install_path }}/bin/dbaccess"
   register: val
   ignore_errors: true
 
 - name: abort install failed
   fail:
-    msg: "Install failed - ifxcsdk.jar does not exist or is zero bytes"
+    msg: "Install failed - dbaccess does not exist or is zero bytes"
   when: not val.stat.exists or val.stat.size == 0
 
 - name: make this the default version by linking "informixdir" to it

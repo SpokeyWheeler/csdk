@@ -1,7 +1,7 @@
 ---
 # defaults file for informix-csdk
 
-csdk_base_path: "/opt/{{ vendor }}/informix/csdk"
+csdk_base_path: "/opt/{{ vendor }}/informix/client"
 csdk_install_path: "{{ csdk_base_path }}/{{ csdk_version }}"
 csdk_tmp_path: "{{ csdk_base_path }}/tmp_install"
 csdk_version_previously_installed: false
