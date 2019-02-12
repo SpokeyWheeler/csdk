@@ -1,0 +1,112 @@
+---
+# tasks file for csdk
+
+- name: check if this version is already installed
+  stat:
+    path: "{{ csdk_install_path }}/.install_complete"
+  register: st
+  ignore_errors: true
+
+- name: set already installed flag if necessary
+  set_fact:
+    csdk_version_previously_installed: true
+  when: st.stat.exists is defined and st.stat.exists
+
+- name: check if force install flag is set
+  set_fact:
+    csdk_version_previously_installed: false
+  when: force_csdk_install
+
+- name: bail out if this version was previously installed and force install is not set
+  fail:
+    msg: "Aborting as CSDK {{ csdk_version }} was previously installed. Set force_csdk_install true in vars to force"
+  when: csdk_version_previously_installed
+
+- name: set the install media file name if HCL
+  set_fact:
+    csdk_install_media_name: "hcl.csdk.{{ csdk_version }}.ALL.tar.gz"
+  when: vendor == "hcl"
+
+- name: set selinux permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: create informix group
+  group:
+    name: informix
+    state: present
+    system: false
+
+- name: create informix user
+  user:
+    home: /opt/informix
+    group: informix
+    name: informix
+    shell: /bin/bash
+    state: present
+    system: false
+
+- name: create target install directory
+  file:
+    group: informix
+    mode: 0775
+    owner: informix
+    path: "{{ csdk_install_path }}"
+    state: directory
+
+- name: create temp install directory
+  file:
+    group: informix
+    mode: 0775
+    owner: informix
+    path: "{{ csdk_tmp_path }}"
+    state: directory
+
+- name: upload / download and extract CSDK installer
+  unarchive:
+    dest: "{{ csdk_tmp_path }}"
+    src: "{{ source_location_of_csdk_media }}/{{ csdk_install_media_name }}"
+
+- name: run installer
+  become: true
+  command: java -jar setup.jar -i silent -DLICENSE=accepted -DUSER_INSTALL_DIR="{{ csdk_install_path }}"
+  args:
+    chdir: "{{ csdk_tmp_path }}"
+  when: not csdk_version_previously_installed
+
+- name: validate install
+  stat:
+    path: "{{ csdk_install_path }}/lib/ifxcsdk.jar"
+  register: val
+  ignore_errors: true
+
+- name: abort install failed
+  fail:
+    msg: "Install failed - ifxcsdk.jar does not exist or is zero bytes"
+  when: not val.stat.exists or val.stat.size == 0
+
+- name: make this the default version by linking "informixdir" to it
+  file:
+    group: informix
+    mode: 0775
+    owner: informix
+    src: "{{ csdk_install_path }}"
+    dest: "{{ csdk_base_path }}/informixdir"
+    state: link
+
+- name: clean up
+  file:
+    group: informix
+    mode: 0775
+    owner: informix
+    path: "{{ csdk_tmp_path }}"
+    state: absent
+
+- name: mark installation as complete
+  file:
+    group: informix
+    mode: 0400
+    owner: informix
+    path: "{{ csdk_install_path }}/.install_complete"
+    state: touch

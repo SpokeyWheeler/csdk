@@ -1,0 +1,7 @@
+---
+# vars file for csdk
+
+vendor: hcl
+csdk_version: 4.10.FC12W1
+force_csdk_install: false
+source_location_of_csdk_media: "~"
