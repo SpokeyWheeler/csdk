@@ -1,3 +1,7 @@
+[![CodeFactor](https://www.codefactor.io/repository/github/spokeywheeler/csdk/badge)](https://www.codefactor.io/repository/github/spokeywheeler/csdk)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a7f92f0fa9254b52a3aa518b518e7b56)](https://www.codacy.com/app/spokeymon/csdk?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SpokeyWheeler/csdk&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.com/SpokeyWheeler/csdk.svg?branch=master)](https://travis-ci.com/SpokeyWheeler/csdk)
+
 Role Name
 =========
 
