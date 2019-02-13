@@ -27,7 +27,7 @@ Vars:
   * vendor: hcl or ibm
   * csdk_version: version number in full, e.g. 4.10.FC12W1
   * force_csdk_install: false or true
-  * source_location_of_csdk_media: Either a path like "/tmp/installs" or a URL like "https://artifactory.com/media/hcl/informix/csdk/4.10.FC12W1"
+  * source_location_of_csdk_media: Either a path like "/tmp/installs" or a URL like "https://artifactory.example.com/media/hcl/informix/csdk/4.10.FC12W1"
 
 Dependencies
 ------------
