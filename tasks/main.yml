@@ -51,7 +51,9 @@
 
 - name: install Java on SuSE platforms
   zypper:
-    name: java-1_8_0-openjdk
+    name:
+    - java-1_8_0-openjdk
+    - libncurses5
   register: task_result
   until: task_result is success
   retries: 150
