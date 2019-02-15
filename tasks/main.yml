@@ -17,11 +17,6 @@
     csdk_version_previously_installed: false
   when: force_csdk_install
 
-- name: bail out if this version was previously installed and force install is not set
-  fail:
-    msg: "Aborting as CSDK {{ csdk_version }} was previously installed. Set force_csdk_install true in vars to force"
-  when: csdk_version_previously_installed
-
 - name: set the install media file name if HCL
   set_fact:
     csdk_install_media_name: "hcl.csdk.{{ csdk_version }}.LNX.tar.gz"
@@ -36,35 +31,46 @@
   selinux:
     policy: targeted
     state: permissive
-  when: ansible_facts['os_family'] == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat" and not csdk_version_previously_installed
 
-- name: install python and Java on Debian platforms
+- name: install CSDK prerequisites on RedHat platforms
+  yum:
+    name:
+    - libaio.x86_64
+    - libgcc.x86_64
+    - libstdc++.x86_64
+    - ncurses.x86_64
+    - pam.x86_64
+  when: ansible_facts['os_family'] == "RedHat" and not csdk_version_previously_installed
+
+- name: install CSDK prerequisites on Debian platforms
   apt:
     name:
     - python2.7
     - openjdk-8-jdk
   register: task_result
   until: task_result is success
-  retries: 150
+  retries: 10
   delay: 2
-  when: ansible_facts['os_family'] == "Debian"
+  when: ansible_facts['os_family'] == "Debian" and not csdk_version_previously_installed
 
-- name: install Java on SuSE platforms
+- name: install CSDK prerequisites on SuSE platforms
   zypper:
     name:
     - java-1_8_0-openjdk
     - libncurses5
   register: task_result
   until: task_result is success
-  retries: 150
+  retries: 10
   delay: 2
-  when: ansible_facts['os_family'] == "Suse"
+  when: ansible_facts['os_family'] == "Suse" and not csdk_version_previously_installed
 
 - name: create informix group
   group:
     name: informix
     state: present
     system: false
+  when: not csdk_version_previously_installed
 
 - name: create informix user
   user:
@@ -74,6 +80,7 @@
     shell: /bin/bash
     state: present
     system: false
+  when: not csdk_version_previously_installed
 
 - name: create target install directory
   file:
@@ -82,6 +89,7 @@
     owner: informix
     path: "{{ csdk_install_path }}"
     state: directory
+  when: not csdk_version_previously_installed
 
 - name: create temp install directory
   file:
@@ -90,11 +98,13 @@
     owner: informix
     path: "{{ csdk_tmp_path }}"
     state: directory
+  when: not csdk_version_previously_installed
 
 - name: upload / download and extract CSDK installer
   unarchive:
     dest: "{{ csdk_tmp_path }}"
     src: "{{ source_location_of_csdk_media }}/{{ csdk_install_media_name }}"
+  when: not csdk_version_previously_installed
 
 - name: run installer
   become: true
@@ -109,10 +119,10 @@
   register: val
   ignore_errors: true
 
-- name: abort install failed
+- name: abort if CSDK install failed
   fail:
-    msg: "Install failed - dbaccess does not exist or is zero bytes"
-  when: not val.stat.exists or val.stat.size == 0
+    msg: "CSDK Install failed - dbaccess does not exist or is zero bytes"
+  when: not val.stat.exists or val.stat.size == 0 and not csdk_version_previously_installed
 
 - name: make this the default version by linking "informixdir" to it
   file:
@@ -122,6 +132,7 @@
     src: "{{ csdk_install_path }}"
     dest: "{{ csdk_base_path }}/informixdir"
     state: link
+  when: not csdk_version_previously_installed
 
 - name: clean up
   file:
@@ -130,6 +141,7 @@
     owner: informix
     path: "{{ csdk_tmp_path }}"
     state: absent
+  when: not csdk_version_previously_installed
 
 - name: mark installation as complete
   file:
@@ -138,3 +150,4 @@
     owner: informix
     path: "{{ csdk_install_path }}/.install_complete"
     state: touch
+  when: not csdk_version_previously_installed

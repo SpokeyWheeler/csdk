@@ -16,17 +16,17 @@ Role Variables
 
 Defaults:
 
-  * csdk_base_path: Starting point for all product installs - you can install multiple versions
-  * csdk_install_path: Target path for install
-  * csdk_tmp_path: Working directory - will be removed
-  * csdk_version_previously_installed: false
+* csdk_base_path: Starting point for all product installs - you can install multiple versions
+* csdk_install_path: Target path for install
+* csdk_tmp_path: Working directory - will be removed
+* csdk_version_previously_installed: false
 
 Vars:
 
-  * vendor: hcl or ibm
-  * csdk_version: version number in full, e.g. 4.10.FC12W1
-  * force_csdk_install: false or true
-  * source_location_of_csdk_media: Either a path like "/tmp/installs" or a URL like "https://artifactory.example.com/media/hcl/informix/csdk/4.10.FC12W1"
+* vendor: hcl or ibm
+* csdk_version: version number in full, e.g. 4.10.FC12W1
+* force_csdk_install: false or true
+* source_location_of_csdk_media: Either a path like "/tmp/installs" or a URL like "https://artifactory.example.com/media/hcl/informix/csdk/4.10.FC12W1"
 
 Dependencies
 ------------
