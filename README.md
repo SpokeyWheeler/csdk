@@ -1,6 +1,6 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b5122e1b9fe43ce9c1882b3e332b0c3)](https://app.codacy.com/app/Zinaida/csdk?utm_source=github.com&utm_medium=referral&utm_content=SpokeyWheeler/csdk&utm_campaign=Badge_Grade_Dashboard)
 [![CodeFactor](https://www.codefactor.io/repository/github/spokeywheeler/csdk/badge)](https://www.codefactor.io/repository/github/spokeywheeler/csdk)
 [![Build Status](https://travis-ci.com/SpokeyWheeler/csdk.svg?branch=master)](https://travis-ci.com/SpokeyWheeler/csdk)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b5122e1b9fe43ce9c1882b3e332b0c3)](https://app.codacy.com/app/Zinaida/csdk)
 
 Role Name
 =========
