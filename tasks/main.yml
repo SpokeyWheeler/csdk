@@ -41,6 +41,10 @@
     - libstdc++.x86_64
     - ncurses.x86_64
     - pam.x86_64
+  register: task_result
+  until: task_result is success
+  retries: 10
+  delay: 2
   when: ansible_facts['os_family'] == "RedHat" and not csdk_version_previously_installed
 
 - name: install CSDK prerequisites on Debian platforms
