@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.com/SpokeyWheeler/csdk.svg?branch=master)](https://travis-ci.com/SpokeyWheeler/csdk)
 [![CodeFactor](https://www.codefactor.io/repository/github/spokeywheeler/csdk/badge)](https://www.codefactor.io/repository/github/spokeywheeler/csdk)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/1b5122e1b9fe43ce9c1882b3e332b0c3)](https://app.codacy.com/app/Zinaida/csdk)
+[![DepShield Badge](https://depshield.sonatype.org/badges/SpokeyWheeler/csdk/depshield.svg)](https://depshield.github.io)
 
 Role Name
 =========
